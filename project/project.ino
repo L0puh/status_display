@@ -20,6 +20,10 @@ void setup() {
 }
 
 void loop() {
+  print_message("some long text that\
+                probably doesn't fit in the something\
+                of this size and better it to split\
+                and show flowing...");
 }
 
 
@@ -28,7 +32,16 @@ void receive_message() {
 }
 
 // TODO: add "flowing" text
-void print_message() {
+// the size if 16 chars * 2 lines
+void print_message(const char* text) {
+  int len = strlen(text);
+  if (len > 16) {
+  
+  } else {
+    print_on_lcd(text, 0, 0);
+  }
+  
+
 }
 
 void print_on_lcd(const char* text, int x, int y){
