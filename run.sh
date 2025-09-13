@@ -10,6 +10,7 @@ if [ ! -d vendor ]; then
    source venv/bin/activate
    pip install -r requirements-slim.txt
    pip install -e . 
+   pip install aiogram python-dotenv
 else 
    echo "activating virtual environment..."
    source vendor/gpt4free/venv/bin/activate
