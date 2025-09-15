@@ -3,6 +3,7 @@ import os
 from aiogram import Bot, Dispatcher, html, F
 from aiogram.filters import CommandStart, Command 
 from aiogram.types import Message, KeyboardButton, ReplyKeyboardMarkup, CallbackQuery
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 dp = Dispatcher()
@@ -24,39 +25,45 @@ async def command_options_handler(message : Message) -> None:
                          reply_markup=get_options_keyboard())
 
 
-#FIXME: doesn't work...
+
 @dp.callback_query(F.data.startswith("opt_"))
 async def callback_options(callback: CallbackQuery):
     action = callback.data.split("_")[1]
-    print(action, callback.message)
-
+    response_text = ""
     if action == "ai":
-        await callback.message.answer(callback.message)
+        response_text = "you chose ai quotes! here's a quote..." 
     elif action == "reminder":
-        await callback.message.answer(callback.message)
+        response_text = "you chose reminder! what should i remind you about?"
     elif action == "task":
-        await callback.message.answer(callback.message)
+        response_text = "you chose current task! what task are you working on?"
     elif action == "weather":
-        await call.message.answer(callback.message)
+        response_text = "you chose weather! what's the location?" 
     elif action == "custom":
-        await callback.message.answer(callback.message)
-    await callback.answer()
+        response_text = "you chose custom! how can i help you customize?" 
+    
+    if callback.message: 
+        await callback.message.edit_text(response_text,
+                                         reply_markup=None) 
+    else:
+        await callback.answer(response_text, show_alert=True) 
 
+    await callback.answer() 
 
-def get_options_keyboard() -> ReplyKeyboardMarkup:
+def get_options_keyboard() -> InlineKeyboardMarkup:
     kb = [
-            [
-                KeyboardButton(text="AI quotes", callback_data="opt_ai"),
-                KeyboardButton(text="Reminder", callback="opt_reminder"),
-                KeyboardButton(text="Current task", callback="opt_task"),
-                KeyboardButton(text="Weather", callback="opt_weather"),
-                KeyboardButton(text="Custom", callback="opt_custom"),
-                ],
-            ]
-    keyboard = ReplyKeyboardMarkup(
-            keyboard=kb,
-            resize_keyboard=True,
-            input_field_placeholder="Choose options"
-            )
+        [
+            InlineKeyboardButton(text="AI quotes", callback_data="opt_ai"),
+            InlineKeyboardButton(text="Reminder", callback_data="opt_reminder"),
+        ],
+        [
+            InlineKeyboardButton(text="Current task", callback_data="opt_task"),
+            InlineKeyboardButton(text="Weather", callback_data="opt_weather"),
+        ],
+        [
+            InlineKeyboardButton(text="Custom", callback_data="opt_custom"),
+        ]
+    ]
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=kb
+    )
     return keyboard
-
