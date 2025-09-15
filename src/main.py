@@ -8,7 +8,7 @@ from aiogram import Bot, html
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
-from bot import dp
+from bot.bot import dp
 from dotenv import load_dotenv
 
 
