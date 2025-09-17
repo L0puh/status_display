@@ -8,7 +8,8 @@
 float last_update = 0.0f;
 const float sleep_time = 1000.0f;     // update time of display
 LiquidCrystal_I2C lcd(0x27, 16, 2);   // setup I2C for display
-
+#include <SoftwareSerial.h>
+SoftwareSerial HM05(8, 9); // RX = 8, TX = 9
 
 void print_on_lcd(const char* text, int x, int y);
 void receive_message();
@@ -20,6 +21,7 @@ float last_press = 0;
 
 void setup() {
   Serial.begin(9600);
+  HM05.begin(9600);
 
   pinMode(BUTTON_PIN, INPUT);
   pinMode(LED_ON_PIN, OUTPUT);
@@ -28,6 +30,7 @@ void setup() {
   lcd.init();
   lcd.backlight();
   last_update = millis();
+
 }
 
 void button_turn_on(){
@@ -43,9 +46,11 @@ void button_turn_on(){
   }
 
   if (is_on){
+    HM05.println("ON");
     digitalWrite(LED_ON_PIN, HIGH);
     digitalWrite(LED_OFF_PIN, LOW);
   } else {
+    HM05.println("OFF");
     digitalWrite(LED_OFF_PIN, HIGH);
     digitalWrite(LED_ON_PIN, LOW);
   }
@@ -57,8 +62,12 @@ void loop() {
   /*               of this size and better it to split\ */
   /*               and show flowing..."); */
 
+  HM05.listen();
+  if (HM05.available() > 0)
+    print_on_lcd("BLE: hello!", 2, 0);
+  else 
+    print_message("serial is off");
   button_turn_on();
-  print_message("hello world");
 
 }
 
