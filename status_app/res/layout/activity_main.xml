@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+
+   <!-- Bluetooth Control Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/buttonConnectBluetooth"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Connect BT"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/buttonDisconnectBluetooth"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Disconnect BT"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Mode:"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- RadioGroup for selecting the application state -->
+    <RadioGroup
+        android:id="@+id/radioGroupStates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+        <RadioButton
+            android:id="@+id/radioButtonWeather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weather"
+            android:checked="true"
+            android:layout_marginEnd="8dp"/>
+
+        <RadioButton
+            android:id="@+id/radioButtonAI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AI Prompt"
+            android:layout_marginEnd="8dp"/>
+
+        <RadioButton
+            android:id="@+id/radioButtonTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task"
+            android:layout_marginEnd="8dp"/>
+
+        <RadioButton
+            android:id="@+id/radioButtonReminder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reminder"
+            android:layout_marginEnd="8dp"/>
+
+        <RadioButton
+            android:id="@+id/radioButtonCustom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Custom" />
+    </RadioGroup>
+
+    <!-- Input Layouts for each state. Initially all are 'gone'. -->
+    <!-- Weather Input Layout -->
+    <LinearLayout
+        android:id="@+id/layoutWeatherInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Location for Weather:"
+            android:layout_marginBottom="4dp"/>
+        <EditText
+            android:id="@+id/editTextLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g., London, UK"
+            android:inputType="textCapWords"/>
+    </LinearLayout>
+
+    <!-- AI Prompt Input Layout -->
+    <LinearLayout
+        android:id="@+id/layoutAIInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter AI Prompt:"
+            android:layout_marginBottom="4dp"/>
+        <EditText
+            android:id="@+id/editTextPrompt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g., Explain quantum physics simply"
+            android:inputType="textMultiLine"
+            android:minLines="3"/>
+    </LinearLayout>
+
+    <!-- Task Input Layout -->
+    <LinearLayout
+        android:id="@+id/layoutTaskInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Task:"
+            android:layout_marginBottom="4dp"/>
+        <EditText
+            android:id="@+id/editTextTask"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g., Buy groceries, call mom"
+            android:inputType="textCapSentences"/>
+    </LinearLayout>
+
+    <!-- Reminder Input Layout -->
+    <LinearLayout
+        android:id="@+id/layoutReminderInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Reminder Time (HH:MM):"
+            android:layout_marginBottom="4dp"/>
+        <EditText
+            android:id="@+id/editTextReminderTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g., 14:30"
+            android:inputType="time"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Reminder Text:"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"/>
+        <EditText
+            android:id="@+id/editTextReminderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g., Take medicine"
+            android:inputType="textCapSentences"/>
+    </LinearLayout>
+
+    <!-- Custom Input Layout -->
+    <LinearLayout
+        android:id="@+id/layoutCustomInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Custom Input:"
+            android:layout_marginBottom="4dp"/>
+        <EditText
+            android:id="@+id/editTextCustom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Any custom text"
+            android:inputType="textMultiLine"
+            android:minLines="2"/>
+    </LinearLayout>
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/buttonSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>

@@ -11,7 +11,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);   // setup I2C for display
 #include <SoftwareSerial.h>
 SoftwareSerial HM05(8, 9); // RX = 8, TX = 9
 
-void print_on_lcd(const char* text, int x, int y);
+void print_on_lcd(const char* text, int x=0, int y=0);
 void receive_message();
 void print_message();
 
@@ -46,13 +46,31 @@ void button_turn_on(){
   }
 
   if (is_on){
-    HM05.println("ON");
     digitalWrite(LED_ON_PIN, HIGH);
     digitalWrite(LED_OFF_PIN, LOW);
   } else {
-    HM05.println("OFF");
     digitalWrite(LED_OFF_PIN, HIGH);
     digitalWrite(LED_ON_PIN, LOW);
+  }
+}
+
+/*
+ *
+ * A - AI mode
+ * C - custom mode
+ * W - weather
+ * T - task 
+ * R - reminder
+ *
+ */
+
+void process_mode(char mode){ 
+  switch(mode) {
+    case 'A':
+      {
+
+        break;
+      }
   }
 }
 
@@ -62,11 +80,24 @@ void loop() {
   /*               of this size and better it to split\ */
   /*               and show flowing..."); */
 
-  HM05.listen();
-  if (HM05.available() > 0)
-    print_on_lcd("BLE: hello!", 2, 0);
-  else 
-    print_message("serial is off");
+  /* HM05.listen(); */
+  if (HM05.available() > 0){
+    char mode = HM05.read();
+    HM05.print("RECIEVED: ");
+    HM05.println(mode);
+    if (mode == 'A')
+      print_on_lcd("AI MODE");
+    if (mode == 'W')
+      print_on_lcd("WEATHER MODE");
+    if (mode == 'T')
+      print_on_lcd("TASK MODE");
+    if (mode == 'R')
+      print_on_lcd("REMINDER MODE");
+    if (mode == 'C')
+      print_on_lcd("CUSTOM MODE");
+  }
+  else {
+  }
   button_turn_on();
 
 }
