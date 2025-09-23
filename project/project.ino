@@ -4,15 +4,17 @@
 #define BUTTON_PIN  2 
 #define LED_ON_PIN  3
 #define LED_OFF_PIN 4
-/* values for display printing */
+
 float last_update = 0.0f;
 const float sleep_time = 1000.0f;     // update time of display
 LiquidCrystal_I2C lcd(0x27, 16, 2);   // setup I2C for display
 #include <SoftwareSerial.h>
+
 SoftwareSerial HM05(8, 9); // RX = 8, TX = 9
 
 void print_on_lcd(const char* text, int x=0, int y=0);
-void receive_message();
+void print_on_lcd(String text, int x=0, int y=0);
+String receive_message();
 void print_message();
 
 bool is_on = false;
@@ -64,47 +66,26 @@ void button_turn_on(){
  *
  */
 
-void process_mode(char mode){ 
-  switch(mode) {
-    case 'A':
-      {
-
-        break;
-      }
-  }
-}
 
 void loop() {
-  /* print_message("some long text that\ */
-  /*               probably doesn't fit in the something\ */
-  /*               of this size and better it to split\ */
-  /*               and show flowing..."); */
-
-  /* HM05.listen(); */
-  if (HM05.available() > 0){
-    char mode = HM05.read();
-    HM05.print("RECIEVED: ");
-    HM05.println(mode);
-    if (mode == 'A')
-      print_on_lcd("AI MODE");
-    if (mode == 'W')
-      print_on_lcd("WEATHER MODE");
-    if (mode == 'T')
-      print_on_lcd("TASK MODE");
-    if (mode == 'R')
-      print_on_lcd("REMINDER MODE");
-    if (mode == 'C')
-      print_on_lcd("CUSTOM MODE");
-  }
-  else {
-  }
+  receive_message();
   button_turn_on();
 
 }
 
 
-// TODO: recieve text from serial port 
-void receive_message() {
+String receive_message() {
+  if (HM05.available() > 0){
+    String s = "";
+    while (HM05.available() > 0) {
+      char c = HM05.read();
+      s += c;
+      delay(10);
+    }
+    print_on_lcd(s, 0, 3);
+    return s;
+  }
+  return "";
 }
 
 // TODO: add "flowing" text
@@ -115,10 +96,17 @@ void print_message(const char* text) {
   } else {
     print_on_lcd(text, 1, 0);
   }
-  
-
 }
 
+void print_on_lcd(String text, int x, int y){
+  float curr = millis();
+  if (curr - last_update >= sleep_time) {
+    lcd.clear();
+    lcd.setCursor(x, y);
+    lcd.print(text);
+    last_update = curr;
+  }
+}
 void print_on_lcd(const char* text, int x, int y){
   float curr = millis();
   if (curr - last_update >= sleep_time) {

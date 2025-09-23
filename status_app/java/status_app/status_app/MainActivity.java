@@ -319,7 +319,7 @@ public class MainActivity extends Activity {
                 if (!customInput.isEmpty()) {
                     inputData = "Custom Input: " + customInput;
                     inputValid = true;
-                    charToSend = 'C';
+                    charToSend = "C";
                 } else {
                     Toast.makeText(this, "Please enter some custom input.", Toast.LENGTH_SHORT).show();
                 }
@@ -331,7 +331,7 @@ public class MainActivity extends Activity {
             Log.i(TAG, "Submitted: " + inputData);
 
             if (!charToSend.isEmpty()) {
-                sendData(charToSend);
+                sendData(inputData);
             }
             clearCurrentInput(); 
         }
