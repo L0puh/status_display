@@ -6,20 +6,22 @@
 #define LED_OFF_PIN 4
 
 float last_update = 0.0f;
-const float sleep_time = 1000.0f;     // update time of display
+const float sleep_time = 850.0f;     // update time of display, speed of
+                                     // "scrolling"
 LiquidCrystal_I2C lcd(0x27, 16, 2);   // setup I2C for display
 #include <SoftwareSerial.h>
 
 SoftwareSerial HM05(8, 9); // RX = 8, TX = 9
 
-void print_on_lcd(const char* text, int x=0, int y=0);
 void print_on_lcd(String text, int x=0, int y=0);
 String receive_message();
-void print_message();
 
 bool is_on = false;
 bool prev_state = false;
 float last_press = 0;
+
+const int lcd_width = 16; 
+int scroll_pos = 0; 
 
 void setup() {
   Serial.begin(9600);
@@ -47,6 +49,9 @@ void button_turn_on(){
     }
   }
 
+}
+
+void blink_led(){
   if (is_on){
     digitalWrite(LED_ON_PIN, HIGH);
     digitalWrite(LED_OFF_PIN, LOW);
@@ -68,7 +73,13 @@ void button_turn_on(){
 
 
 void loop() {
-  receive_message();
+  blink_led();
+  if (is_on == LOW){
+    receive_message();
+  }
+  else {
+    print_on_lcd("the display is turned off");
+  }
   button_turn_on();
 
 }
@@ -82,37 +93,40 @@ String receive_message() {
       s += c;
       delay(10);
     }
-    print_on_lcd(s, 0, 3);
+    print_on_lcd(s);
+
     return s;
   }
   return "";
 }
 
-// TODO: add "flowing" text
-// the size if 16 chars * 2 lines
-void print_message(const char* text) {
-  int len = strlen(text);
-  if (len > 16) {
-  } else {
-    print_on_lcd(text, 1, 0);
+void print_on_lcd(String text, int x, int y){
+  //FIXME: doesn't work for recieved messages for some reason? 
+  float curr = millis();
+  if (curr - last_update >= sleep_time) {
+    lcd.clear();
+
+    String chunk = "";
+    if (scroll_pos + lcd_width <= text.length()){
+      chunk = text.substring(scroll_pos, scroll_pos + lcd_width);
+    } else {
+      int chars = text.length() - scroll_pos;
+      chunk = text.substring(scroll_pos);
+      for (int i = 0; i < (lcd_width - chars); i++) chunk += " ";
+      if (chars < lcd_width) {
+        int start = 0;
+        int remain = lcd_width - chunk.length();
+        if (remain > 0) chunk += text.substring(start, min(remain, text.length()));
+      }
+    }
+    lcd.setCursor(x, y);
+    lcd.print(chunk);
+    scroll_pos++;
+    last_update = curr;
+    if (scroll_pos > text.length() + lcd_width) {
+      scroll_pos = 0;
+    }
   }
 }
 
-void print_on_lcd(String text, int x, int y){
-  float curr = millis();
-  if (curr - last_update >= sleep_time) {
-    lcd.clear();
-    lcd.setCursor(x, y);
-    lcd.print(text);
-    last_update = curr;
-  }
-}
-void print_on_lcd(const char* text, int x, int y){
-  float curr = millis();
-  if (curr - last_update >= sleep_time) {
-    lcd.clear();
-    lcd.setCursor(x, y);
-    lcd.print(text);
-    last_update = curr;
-  }
-}
+
